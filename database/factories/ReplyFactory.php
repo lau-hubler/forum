@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(Reply::class, function (Faker $faker) {
     return [
         'body' => $faker->paragraph,
-        'thread_id' => factory(Thread::class)->make()->id,
-        'user_id' => User::all()->random()->id,
+        'thread_id' => factory(Thread::class),
+        'user_id' => factory(User::class),
     ];
 });
