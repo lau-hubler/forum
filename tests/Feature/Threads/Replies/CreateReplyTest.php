@@ -7,15 +7,12 @@ use App\Thread;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Feature\Concerns\ReplyTestHasDataProvider;
-use tests\Mockery\Generator\ClassWithDebugInfo;
 use Tests\TestCase;
 
 class CreateReplyTest extends TestCase
 {
     use DatabaseMigrations;
     use WithFaker;
-    use ReplyTestHasDataProvider;
 
     private $thread;
 
@@ -47,17 +44,12 @@ class CreateReplyTest extends TestCase
         $this->assertDatabaseCount('replies', 1);
     }
 
-    /**
-     * @dataProvider storeTestDataProvider
-     * @param array $replyData
-     * @param string $field
-     */
-    public function test_a_reply_cannot_be_created_due_validations_problems( array $replyData, string $field)
+    public function test_a_empty_reply_cannot_be_created()
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', $replyData );
+        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', [ 'body' => '']);
 
-        $response->assertSessionHasErrors($field);
+        $response->assertSessionHasErrors('body');
     }
 }

@@ -22,12 +22,9 @@ class ReplyController extends Controller
      */
     public function store(Request $request, Thread $thread)
     {
-        $request->validate([
-            'body' => 'required',
-            'thread_id' => 'required|exists:threads,id'
-            ]);
+        $request->validate(['body' => 'required']);
 
-        $thread->addReply(['body' => $request->body, 'user_id' => Auth::user()]);
+        $thread->addReply(['body' => $request->body, 'user_id' => Auth::user()->id]);
 
         return redirect(route('threads.show', $thread));
     }
