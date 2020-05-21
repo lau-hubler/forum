@@ -5,11 +5,9 @@ namespace Tests\Feature\Threads\Replies;
 use App\Reply;
 use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class IndexRepliesTest extends TestCase
+class ShowRepliesTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -17,8 +15,9 @@ class IndexRepliesTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
-        $this->reply = factory(Reply::class)->create(['thread_id' => $this->thread->id]);
+        $this->thread = create(Thread::class);
+        $this->reply = create(Reply::class, ['thread_id' => $this->thread->id]);
+
         $this->response = $this->get('/threads/' . $this->thread->id);
     }
 

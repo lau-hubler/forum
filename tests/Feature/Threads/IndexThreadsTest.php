@@ -20,7 +20,8 @@ class IndexThreadsTest extends TestCase
 
     public function test_user_can_see_lastest_thread_title_in_index()
     {
-        $thread = factory(Thread::class)->create();
+        factory(Thread::class, 50)->create();
+        $thread = create(Thread::class);
 
         $response = $this->get('/threads');
 

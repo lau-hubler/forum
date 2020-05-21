@@ -20,12 +20,12 @@ class CreateReplyTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
+        $this->thread = create(Thread::class);
     }
 
     public function test_an_unauthenticated_user_cannot_create_a_reply()
     {
-        $reply = factory(Reply::class)->raw();
+        $reply = makeRaw(Reply::class);
 
         $response = $this->post('/threads/' . $this->thread->id . '/replies', $reply );
 
@@ -34,10 +34,9 @@ class CreateReplyTest extends TestCase
 
     public function test_an_authenticated_user_can_create_a_reply()
     {
-        $user = factory(User::class)->create();
-        $reply = factory(Reply::class)->raw();
+        $reply = makeRaw(Reply::class);
 
-        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', $reply );
+        $response = $this->signIn()->post('/threads/' . $this->thread->id . '/replies', $reply );
 
         $response->assertRedirect('/threads/' . $this->thread->id);
         $this->assertDatabaseCount('replies', 1);
@@ -45,9 +44,7 @@ class CreateReplyTest extends TestCase
 
     public function test_a_empty_reply_cannot_be_created()
     {
-        $user = factory(User::class)->create();
-
-        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', [ 'body' => '']);
+        $response = $this->signIn()->post('/threads/' . $this->thread->id . '/replies', [ 'body' => '']);
 
         $response->assertSessionHasErrors('body');
     }

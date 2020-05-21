@@ -14,7 +14,7 @@ class ShowThreadTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
+        $this->thread = create(Thread::class);
         $this->response = $this->get('/threads/' . $this->thread->id);
     }
 
