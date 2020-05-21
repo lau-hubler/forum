@@ -25,9 +25,9 @@ class CreateReplyTest extends TestCase
 
     public function test_an_unauthenticated_user_cannot_create_a_reply()
     {
-        $reply = factory(Reply::class)->make();
+        $reply = factory(Reply::class)->raw();
 
-        $response = $this->post('/threads/' . $this->thread->id . '/replies', $reply->toArray() );
+        $response = $this->post('/threads/' . $this->thread->id . '/replies', $reply );
 
         $response->assertRedirect(route('login'));
     }
@@ -35,12 +35,11 @@ class CreateReplyTest extends TestCase
     public function test_an_authenticated_user_can_create_a_reply()
     {
         $user = factory(User::class)->create();
-        $reply = factory(Reply::class)->make();
+        $reply = factory(Reply::class)->raw();
 
-        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', $reply->toArray() );
+        $response = $this->actingAs($user)->post('/threads/' . $this->thread->id . '/replies', $reply );
 
         $response->assertRedirect('/threads/' . $this->thread->id);
-        $this->get('/threads/' . $this->thread->id)->assertSee($reply->body);
         $this->assertDatabaseCount('replies', 1);
     }
 
